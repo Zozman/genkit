@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import bodyParser from 'body-parser';
 import cors, { type CorsOptions } from 'cors';
 import express from 'express';
 import { type Action, type ActionContext, type Flow, type z } from 'genkit';
@@ -192,7 +191,7 @@ export interface FlowServerOptions {
   /** HTTP method path prefix for the exposed flows. */
   pathPrefix?: string;
   /** JSON body parser options. */
-  jsonParserOptions?: bodyParser.OptionsJson;
+  jsonParserOptions?: Parameters<typeof express.json>[0];
 }
 
 /**
@@ -234,7 +233,7 @@ export class FlowServer {
   async start() {
     const server = express();
 
-    server.use(bodyParser.json(this.options.jsonParserOptions));
+    server.use(express.json(this.options.jsonParserOptions));
     server.use(cors(this.options.cors));
 
     logger.debug('Running flow server with flow paths:');
